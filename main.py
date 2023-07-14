@@ -39,7 +39,7 @@ def custom_impl():
   higher accuracy requires additional cycles or adjustments
   to the neurel network architecture. This can be easily done
   by adding more Layer objects to the parameter list below.
-      accuracy  0.87     10000
+  accuracy  0.87     10000
   '''
   x_test, x_train, y_train, y_test, y_train_orig, y_test_orig = _init_img_data()
   x_train = flatten_bin_img(x_train).T
