@@ -91,11 +91,11 @@ def compute_crossentropy_loss(Z, Y):
 
     return -1 * total/Y.shape[0]
 
-def compute_theshold_softmax(Z):
+def compute_softmax_prediction(Z):
     eZ = softmax(Z)
     return np.argmax(eZ, axis = 0)
-## Back propagation
 
+## Back propagation
 def _lin_b_prop(dZ, cache):
     Aprev, W, b = cache
     n = Aprev.shape[1]
@@ -144,14 +144,14 @@ def L_model_b_prop(AL, Y, caches):
 
     return grads
 
-def update_params(params, grads, lr):
+def update_params(params, grads, learning_rate):
     params = params.copy()
     Ldims =  len(params) // 3
     for l in range(Ldims):
-        params["W" + str(l+1)] = params["W" + str(l+1)] - lr*grads["dW" + str(l+1)]
-        params["b" + str(l+1)] = params["b" + str(l+1)] - lr*grads["db" + str(l+1)]
+        params["W" + str(l+1)] = params["W" + str(l+1)] - learning_rate*grads["dW" + str(l+1)]
+        params["b" + str(l+1)] = params["b" + str(l+1)] - learning_rate*grads["db" + str(l+1)]
     return params
 
 def predict(params, input):
     Z, _ = L_model_f_prop(input, params)
-    return compute_theshold_softmax(Z)
+    return compute_softmax_prediction(Z)

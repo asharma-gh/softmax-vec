@@ -35,6 +35,12 @@ def custom_impl():
     L_model_b_prop, \
     update_params, \
     predict
+  '''
+  higher accuracy requires additional cycles or adjustments
+  to the neurel network architecture. This can be easily done
+  by adding more Layer objects to the parameter list below.
+      accuracy  0.87     10000
+  '''
   x_test, x_train, y_train, y_test, y_train_orig, y_test_orig = _init_img_data()
   x_train = flatten_bin_img(x_train).T
   x_test = flatten_bin_img(x_test).T
@@ -55,13 +61,16 @@ def custom_impl():
       activation_function=LINEAR
     )
   ])
+  # Note: MNIST runs over 60_000 images which significantly impacts performance.
+  # Switching to train on the test dataset is a good idea to quickly iterate. For 
+  # most accurate prediction results use the train dataset.
   grads = None
-  for ii in range(1000):
-    R, ca = L_model_f_prop(x_test, param)
-    if ii % 100 == 0:
-      print(f"Cost: {compute_crossentropy_loss(R, y_test)}")
-    grads = L_model_b_prop(R, y_test, ca)
-    param = update_params(param, grads, .05)
+  for ii in range(200):
+    R, ca = L_model_f_prop(x_train, param)
+    if ii % 50 == 0:
+      print(f"Cost: {compute_crossentropy_loss(R, y_train)}")
+    grads = L_model_b_prop(R, y_train, ca)
+    param = update_params(param, grads, learning_rate=.5)
   res = predict(param, x_test)
   print(classification_report(y_test_orig, res))
 
